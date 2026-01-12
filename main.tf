@@ -1,6 +1,6 @@
 module "ecs_service_bot" {
   source  = "c0x12c/ecs-application/aws"
-  version = "1.2.1"
+  version = "2.0.1"
 
   name        = var.service_name
   environment = var.environment
