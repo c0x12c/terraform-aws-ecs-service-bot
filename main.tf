@@ -52,5 +52,13 @@ module "main" {
   notification_service_event_types    = var.notification_service_event_types
   notification_task_stop_codes        = var.notification_task_stop_codes
 
+  # Datadog
+  enabled_datadog_sidecar = var.enabled_datadog_sidecar
+  dd_site                 = var.dd_site
+  dd_api_key_arn          = var.dd_api_key_arn
+  dd_agent_image          = var.dd_agent_image
+  dd_port                 = var.dd_port
+  dd_sidecar_environment  = var.dd_sidecar_environment
+
   launch_type = var.launch_type
 }
