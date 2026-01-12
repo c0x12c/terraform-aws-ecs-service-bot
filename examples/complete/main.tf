@@ -72,9 +72,9 @@ resource "aws_ssm_parameter" "atlassian_api_token" {
 module "service_bot" {
   source = "../../"
 
-  name        = "service-bot"
-  environment = var.environment
-  region      = var.region
+  service_name = "service-bot"
+  environment  = var.environment
+  region       = var.region
 
   # ECS Configuration
   ecs_cluster_id   = var.ecs_cluster_id
