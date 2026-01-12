@@ -130,7 +130,7 @@ variable "force_new_deployment" {
 variable "service_bot_image" {
   description = "Docker image for the service bot (include tag)"
   type        = string
-  default     = "ghcr.io/spartan-stratos/service-bot:v0.3.0"
+  default     = "ghcr.io/spartan-stratos/service-bot:v0.3.1"
 }
 
 # ALB & Route53 Configuration
