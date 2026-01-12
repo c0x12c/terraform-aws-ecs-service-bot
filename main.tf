@@ -1,6 +1,6 @@
-module "ecs_service_bot" {
+module "main" {
   source  = "c0x12c/ecs-application/aws"
-  version = "1.2.1"
+  version = "~> 2.0.1"
 
   name        = var.service_name
   environment = var.environment
@@ -41,137 +41,9 @@ module "ecs_service_bot" {
   dns_name                      = var.dns_name
   route53_zone_id               = var.route53_zone_id
 
-  # Environment Variables (equivalent to Kubernetes ConfigMap)
-  container_environment = concat([
-    # Required environment variables
-    {
-      name  = "MICRONAUT_ENVIRONMENTS"
-      value = var.environment
-    },
-    {
-      name  = "HTTP_CLIENT_LOG_LEVEL"
-      value = var.http_client_log_level
-    },
-    {
-      name  = "APP_DOMAIN"
-      value = var.app_domain
-    },
-    {
-      name  = "SLACK_BOT_USER_ID"
-      value = var.slack_bot_user_id
-    },
-    {
-      name  = "ALLOWED_SLACK_CHANNEL"
-      value = var.allowed_slack_channel
-    },
-    {
-      name  = "ON_CALL_SLACK_CHANNEL"
-      value = var.on_call_slack_channel
-    },
-    {
-      name  = "SLACK_USER_GROUP_NAMES"
-      value = var.slack_user_group_names
-    },
-    {
-      name  = "SLACK_CHANNEL_PREFIX"
-      value = var.slack_channel_prefix
-    },
-    {
-      name  = "GITHUB_ORG"
-      value = var.github_org
-    },
-    {
-      name  = "GITHUB_REPO_LIST"
-      value = join(",", concat(var.app_repo_list, var.infra_repo_list))
-    },
-    {
-      name  = "APP_REPO_LIST"
-      value = join(",", var.app_repo_list)
-    },
-    {
-      name  = "INFRA_REPO_LIST"
-      value = join(",", var.infra_repo_list)
-    },
-    # Optional environment variables
-    {
-      name  = "ATLASSIAN_HOST"
-      value = var.atlassian_host
-    },
-    {
-      name  = "JENKINS_USERNAME"
-      value = var.jenkins_username
-    },
-    {
-      name  = "JENKINS_HOST"
-      value = var.jenkins_host
-    },
-    {
-      name  = "JENKINS_REPOSITORY"
-      value = var.jenkins_repository
-    },
-    {
-      name  = "ATLASSIAN_USERNAME"
-      value = var.atlassian_username
-    },
-    {
-      name  = "ATLASSIAN_PAGE_PATH_PREFIX"
-      value = var.atlassian_page_path_prefix
-    },
-    {
-      name  = "SPACE_ID"
-      value = var.space_id
-    },
-    {
-      name  = "ON_CALL_PAGE_ID"
-      value = var.on_call_page_id
-    },
-    {
-      name  = "ON_CALL_TEMPLATE_PAGE_ID"
-      value = var.on_call_template_page_id
-    },
-    {
-      name  = "ON_CALL_PROCESS_PAGE_ID"
-      value = var.on_call_process_page_id
-    }
-  ], var.additional_environment_variables)
-
-  # Secrets (equivalent to Kubernetes Secrets)
-  container_secrets = concat([
-    # Required secrets
-    {
-      name      = "SLACK_SIGNING_SECRET"
-      valueFrom = var.slack_signing_secret_arn
-    },
-    {
-      name      = "SLACK_BOT_TOKEN"
-      valueFrom = var.slack_bot_token_arn
-    },
-    {
-      name      = "SLACK_USER_TOKEN"
-      valueFrom = var.slack_user_token_arn
-    },
-    {
-      name      = "GITHUB_APP_ID"
-      valueFrom = var.github_app_id_arn
-    },
-    {
-      name      = "GITHUB_APP_INSTALLATION_ID"
-      valueFrom = var.github_app_installation_id_arn
-    },
-    {
-      name      = "GITHUB_APP_PRIVATE_KEY"
-      valueFrom = var.github_app_private_key_arn
-    },
-    # Optional secrets
-    {
-      name      = "JENKINS_API_TOKEN"
-      valueFrom = var.jenkins_api_token_arn
-    },
-    {
-      name      = "ATLASSIAN_API_TOKEN"
-      valueFrom = var.atlassian_api_token_arn
-    }
-  ], var.additional_secret_arns)
+  # Environment Variables and Secrets (defined in locals.tf)
+  container_environment = local.container_environment
+  container_secrets     = local.container_secrets
 
   # Notification
   enabled_notification                = var.enabled_notification
@@ -179,6 +51,14 @@ module "ecs_service_bot" {
   notification_deployment_event_types = var.notification_deployment_event_types
   notification_service_event_types    = var.notification_service_event_types
   notification_task_stop_codes        = var.notification_task_stop_codes
+
+  # Datadog
+  enabled_datadog_sidecar = var.enabled_datadog_sidecar
+  dd_site                 = var.dd_site
+  dd_api_key_arn          = var.dd_api_key_arn
+  dd_agent_image          = var.dd_agent_image
+  dd_port                 = var.dd_port
+  dd_sidecar_environment  = var.dd_sidecar_environment
 
   launch_type = var.launch_type
 }

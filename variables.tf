@@ -392,3 +392,43 @@ variable "notification_task_stop_codes" {
   type        = list(string)
   default     = ["TaskFailedToStart", "EssentialContainerExited", "ContainerFailedToStart"]
 }
+
+# Datadog Configuration
+variable "enabled_datadog_sidecar" {
+  description = "Enable Datadog sidecar for monitoring and logging"
+  type        = bool
+  default     = false
+}
+
+variable "dd_site" {
+  description = "Datadog site (e.g., datadoghq.com, us3.datadoghq.com)"
+  type        = string
+  default     = null
+}
+
+variable "dd_api_key_arn" {
+  description = "SSM Parameter Store or Secrets Manager ARN for Datadog API key"
+  type        = string
+  default     = null
+}
+
+variable "dd_agent_image" {
+  description = "Datadog agent Docker image"
+  type        = string
+  default     = "public.ecr.aws/datadog/agent:latest"
+}
+
+variable "dd_port" {
+  description = "Datadog agent port"
+  type        = number
+  default     = 8126
+}
+
+variable "dd_sidecar_environment" {
+  description = "Additional environment variables for Datadog sidecar"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
